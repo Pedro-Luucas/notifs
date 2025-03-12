@@ -1,2 +1,0 @@
-# notifs
-Ver notificações apagadas
