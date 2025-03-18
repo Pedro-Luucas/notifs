@@ -21,7 +21,10 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"]
+      "permissions": [
+        "android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+      ],
+      "package": "com.williamminerva.notifs"
     },
     "web": {
       "bundler": "metro",
@@ -33,6 +36,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "b845fc78-0d64-42d5-9133-9fcfee38339c"
+      }
+    },
+    "owner": "williamminerva"
   }
 }
