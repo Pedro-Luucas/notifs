@@ -4,18 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button } from 'react-native-paper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Import the notification service
-import { StoredNotification } from './notificationService';
-
-// Define the notification interface (extending StoredNotification)
-interface Notification extends Omit<StoredNotification, 'time'> {
-  date: string; // We'll use 'date' instead of 'time' for consistency with existing code
-}
-
 export default function User() {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const notificationListener = useRef<Notifications.Subscription | null>(null);
-  const responseListener = useRef<Notifications.Subscription | null>(null);
+  const [notifications, setNotifications] = useState([]);
+  const notificationListener = useRef();
+  const responseListener = useRef();
 
   // Load saved notifications when component mounts
   useEffect(() => {
@@ -48,7 +40,7 @@ export default function User() {
   };
 
   // Save notifications to AsyncStorage
-  const saveNotifications = async (notifs: Notification[]) => {
+  const saveNotifications = async (notifs) => {
     try {
       await AsyncStorage.setItem('notifications', JSON.stringify(notifs));
     } catch (error) {
@@ -60,14 +52,12 @@ export default function User() {
   const registerForNotifications = () => {
     // This listener is fired whenever a notification is received while the app is foregrounded
     notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-
-      const newNotification: Notification = {
+      const newNotification = {
         id: Date.now().toString(),
         title: notification.request.content.title || 'No Title',
         body: notification.request.content.body || 'No Content',
         data: notification.request.content.data,
-        date: new Date().toLocaleString(),
-        app: 'Expo Notifications'
+        date: new Date().toLocaleString()
       };
       
       const updatedNotifications = [...notifications, newNotification];
@@ -77,14 +67,13 @@ export default function User() {
 
     // This listener is fired whenever a user taps on or interacts with a notification
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      const newNotification: Notification = {
+      const newNotification = {
         id: Date.now().toString(),
         title: response.notification.request.content.title || 'No Title',
         body: response.notification.request.content.body || 'No Content',
         data: response.notification.request.content.data,
         date: new Date().toLocaleString(),
-        userInteraction: true,
-        app: 'Expo Notifications'
+        userInteraction: true
       };
       
       const updatedNotifications = [...notifications, newNotification];
